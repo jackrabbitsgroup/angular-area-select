@@ -1,0 +1,36 @@
+{
+	"name": "angular-area-select",
+	"version": "1.0.0",
+	"authors": [
+		"Luke Madera <luke.madera@gmail.com>"
+	],
+	"description": "AngularJS directive angular-area-select area select image rectangle drag crop",
+	"keywords": [
+		"AngularJS",
+		"directive",
+		"angular-area-select",
+		"area",
+		"select",
+		"image",
+		"rectangle",
+		"drag",
+		"crop",
+		"angular"
+	],
+	"license": "MIT",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests"
+	],
+	"dependencies": {
+		"angular":"~1.2.0",
+		"angular-animate":"~1.2.0",
+		"angular-sanitize":"~1.2.0",
+		"angular-touch":"~1.2.0"
+	},
+	"devDependencies": {
+	}
+}
