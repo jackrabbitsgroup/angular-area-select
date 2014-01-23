@@ -30,6 +30,7 @@
 
 @param {Object} attrs REMEMBER: use snake-case when setting these on the partial! i.e. my-attr='1' NOT myAttr='1'
 	@param {Number} [aspectRatio =0] 0 to NOT force an aspect ratio, otherwise width/height (so 1 for a square, 2 for twice as wide as tall and .5 for twice as tall as wide, etc.: use any number >0)
+	@param {Number} [selectBuffer =50] Number of pixels OUTSIDE of element to allow starting selection
 
 @dependencies
 [none]
@@ -48,7 +49,7 @@ $scope.coords ={};
 
 //EXAMPLE 2 - aspect ratio (force square)
 partial / html:
-<div jrg-area-select coords='coords' aspect-ratio='1'>
+<div jrg-area-select coords='coords' aspect-ratio='1' select-buffer='25'>
 	<!-- everything in here will be transcluded / stuffed in and used as the element to select inside of -->
 	<div style='background-color:blue; height:200px; width:300px;'>&nbsp;</div>
 </div>
@@ -74,13 +75,20 @@ function ($timeout) {
 		// replace: true,
 		template: function(element, attrs) {
 			var defaultsAttrs ={
-				aspectRatio: 0
+				aspectRatio: 0,
+				selectBuffer: 50
 			};
 			for(var xx in defaultsAttrs) {
 				if(attrs[xx] ===undefined) {
 					attrs[xx] =defaultsAttrs[xx];
 				}
 			}
+			var toInt =['aspectRatio', 'selectBuffer'];
+			var ii;
+			for(ii =0; ii<toInt.length; ii++) {
+				attrs[toInt[ii]] =parseInt(attrs[toInt[ii]], 10);
+			}
+			
 			
 			var html ="<div style='position:relative;'>"+
 				"<span class='jrg-area-select-ele' ng-transclude></span>"+
@@ -184,12 +192,6 @@ function ($timeout) {
 			};
 			
 			/**
-			@property buffer Number of pixels to allow outside the element to start tracking it
-			@type Number
-			*/
-			var buffer =50;
-			
-			/**
 			@toc 2.
 			Event handlers setup - mousedown/touchstart, mouseup/touchend, mousemove/touchmove
 			*/
@@ -247,7 +249,7 @@ function ($timeout) {
 				var xx =evt.pageX;
 				var yy =evt.pageY;
 				// if(xx >=$scope.coordsTemp.ele.left && xx <=$scope.coordsTemp.ele.right && yy >=$scope.coordsTemp.ele.top && yy <=$scope.coordsTemp.ele.bottom) {
-				if(xx >=($scope.coordsTemp.ele.left -buffer) && xx <= ($scope.coordsTemp.ele.right +buffer) && yy >= ($scope.coordsTemp.ele.top -buffer) && yy <= ($scope.coordsTemp.ele.bottom +buffer) ) {		//only start if within a certain distance of the element itself (i.e. don't reset if doing something else but DO want a little buffer to allow for selecting from an edge and getting it all)
+				if(xx >=($scope.coordsTemp.ele.left -$attrs.selectBuffer) && xx <= ($scope.coordsTemp.ele.right +$attrs.selectBuffer) && yy >= ($scope.coordsTemp.ele.top -$attrs.selectBuffer) && yy <= ($scope.coordsTemp.ele.bottom +$attrs.selectBuffer) ) {		//only start if within a certain distance of the element itself (i.e. don't reset if doing something else but DO want a little buffer to allow for selecting from an edge and getting it all)
 				// if(1) {
 					// console.log('starting');
 					// console.log(evt);
