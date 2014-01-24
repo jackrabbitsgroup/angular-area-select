@@ -1,0 +1,13 @@
+/* jrg-area-select */
+.jrg-area-select-ele,
+.jrg-area-select-blurred {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.jrg-area-select-blurred {
+  position: absolute;
+  background-color: black;
+  opacity: .5;
+}

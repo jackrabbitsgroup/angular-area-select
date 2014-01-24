@@ -4,7 +4,7 @@
 	"authors": [
 		"Luke Madera <luke.madera@gmail.com>"
 	],
-	"description": "AngularJS directive angular-area-select area select image rectangle drag crop",
+	"description": "Select an area (image or otherwise) with mouse or touch, i.e. for crop. Can set aspect ratio.",
 	"keywords": [
 		"AngularJS",
 		"directive",
