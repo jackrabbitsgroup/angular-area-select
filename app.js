@@ -20,7 +20,7 @@ config(['$routeProvider', '$locationProvider', '$compileProvider', function($rou
 	var staticPath;
 	// staticPath ='/angular-directives/angular-area-select/';		//local
 	staticPath ='/';		//nodejs (local)
-	// staticPath ='/angular-area-select/';		//gh-pages
+	staticPath ='/angular-area-select/';		//gh-pages
 	var appPathRoute ='/';
 	var pagesPath =staticPath+'pages/';
 	
