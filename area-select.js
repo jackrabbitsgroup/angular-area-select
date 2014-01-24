@@ -100,10 +100,10 @@ function ($timeout) {
 			
 			var html ="<div style='position:relative;'>";
 				if(attrs.inline) {
-					html+="<div class='jrg-area-select-ele' style='display:inline;' ng-transclude></div>"+
+					html+="<div class='jrg-area-select-ele' style='display:inline;' ng-transclude></div>";
 				}
 				else {
-					html+="<div class='jrg-area-select-ele' ng-transclude></div>"+
+					html+="<div class='jrg-area-select-ele' ng-transclude></div>";
 				}
 				html+="<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.ele.left -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.ele.top)}}px; width:{{(coordsTemp.select.left -coordsTemp.ele.left)}}px;'>&nbsp;</div>"+		//left side: from element left to select left; from element top to element bottom
 				"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.select.right -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.ele.top)}}px; width:{{(coordsTemp.ele.right -coordsTemp.select.right)}}px;'>&nbsp;</div>"+		//right side: from select right to element right; from element top to element bottom
