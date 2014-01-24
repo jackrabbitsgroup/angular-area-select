@@ -11,6 +11,7 @@
 8. calculateSelectArea
 9. getEleCoords
 10. $scope.$on('jrgAreaSelectReInit',..
+11. $scope.$on('jrgAreaSelectHide',..
 
 @param {Object} scope (attrs that must be defined on the scope (i.e. in the controller) - they can't just be defined in the partial html). REMEMBER: use snake-case when setting these on the partial!
 	@param {Object} coords Object to pass in (can be empty) that will be stuffed with the values, specifically:
@@ -105,10 +106,13 @@ function ($timeout) {
 				else {
 					html+="<div class='jrg-area-select-ele' ng-transclude></div>";
 				}
-				html+="<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.ele.left -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.ele.top)}}px; width:{{(coordsTemp.select.left -coordsTemp.ele.left)}}px;'>&nbsp;</div>"+		//left side: from element left to select left; from element top to element bottom
-				"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.select.right -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.ele.top)}}px; width:{{(coordsTemp.ele.right -coordsTemp.select.right)}}px;'>&nbsp;</div>"+		//right side: from select right to element right; from element top to element bottom
-				"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.select.left -offsets.ele.left)}}px; height:{{(coordsTemp.select.top -coordsTemp.ele.top)}}px; width:{{(coordsTemp.select.right -coordsTemp.select.left)}}px;'>&nbsp;</div>"+		//top side: from select left to select right; from element top to select top
-				"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.select.bottom -offsets.ele.top)}}px; left:{{(coordsTemp.select.left -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.select.bottom)}}px; width:{{(coordsTemp.select.right -coordsTemp.select.left)}}px;'>&nbsp;</div>"+		//bottom side: from select left to select right; from select bottom to element bottom
+				
+				html+="<div ng-show='show.blurred'>"+
+					"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.ele.left -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.ele.top)}}px; width:{{(coordsTemp.select.left -coordsTemp.ele.left)}}px;'>&nbsp;</div>"+		//left side: from element left to select left; from element top to element bottom
+					"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.select.right -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.ele.top)}}px; width:{{(coordsTemp.ele.right -coordsTemp.select.right)}}px;'>&nbsp;</div>"+		//right side: from select right to element right; from element top to element bottom
+					"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.select.left -offsets.ele.left)}}px; height:{{(coordsTemp.select.top -coordsTemp.ele.top)}}px; width:{{(coordsTemp.select.right -coordsTemp.select.left)}}px;'>&nbsp;</div>"+		//top side: from select left to select right; from element top to select top
+					"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.select.bottom -offsets.ele.top)}}px; left:{{(coordsTemp.select.left -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.select.bottom)}}px; width:{{(coordsTemp.select.right -coordsTemp.select.left)}}px;'>&nbsp;</div>"+		//bottom side: from select left to select right; from select bottom to element bottom
+				"</div>"+
 				
 				//TESTING
 				// "<div>coords: {{coords}}</div>"+
@@ -141,6 +145,14 @@ function ($timeout) {
 					top: 0,
 					left: 0
 				}
+			};
+			
+			/**
+			@property $scope.show For use with ng-show/ng-hide
+			@type Object
+			*/
+			$scope.show ={
+				blurred: true
 			};
 			
 			/**
@@ -252,6 +264,7 @@ function ($timeout) {
 			*/
 			function init(params) {
 				getEleCoords({});
+				$scope.show.blurred =true;
 			}
 			
 			/**
@@ -476,6 +489,19 @@ function ($timeout) {
 			$scope.$on('jrgAreaSelectReInit', function(evt, params) {
 				if(params.instId ==$attrs.instId) {
 					init({});
+				}
+			});
+			
+			/**
+			Hides / resets the blurred divs, etc. so you can't see any part of this directive other than the un-alterted transcluded content
+			@toc 11.
+			@method $scope.$on('jrgAreaSelectHide',..
+			@param {Object} params
+				@param {String} instId
+			*/
+			$scope.$on('jrgAreaSelectHide', function(evt, params) {
+				if(params.instId ==$attrs.instId) {
+					$scope.show.blurred =false;
 				}
 			});
 			
