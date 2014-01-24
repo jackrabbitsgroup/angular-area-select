@@ -1,7 +1,10 @@
 # angular-area-select
 
+Only 7kb (compared to 16kb for jCrop) with NO jQuery dependency!
+
+A more lightweight (less feature rich) version of jCrop. Can also be used for non-images as well (generic area select).
+
 Select an area (image or otherwise) with mouse or touch, i.e. for crop. Can set aspect ratio.
-A more lightweight (less feature rich) version of jCrop (no jQuery dependency). Can also be used for non-images as well (generic area select).
 
 ## Demo
 http://jackrabbitsgroup.github.io/angular-area-select/
