@@ -33,6 +33,7 @@
 	@param {Number} [aspectRatio =0] 0 to NOT force an aspect ratio, otherwise width/height (so 1 for a square, 2 for twice as wide as tall and .5 for twice as tall as wide, etc.: use any number >0)
 	@param {Number} [selectBuffer =50] Number of pixels OUTSIDE of element to allow starting selection
 	@param {String} [instId =[random string]] A way to uniquely identify this instance of the directive - used for using $scope.$on('jrgAreaSelectReInit',..
+	@param {Number} [inline =0] Set to 1 to make the ng-transclude be an inline element (rather than a block element) so it won't take full width
 
 @dependencies
 [none]
@@ -40,7 +41,7 @@
 @usage
 //EXAMPLE 1 - default
 partial / html:
-<div jrg-area-select coords='coords'>
+<div jrg-area-select coords='coords' inline='1'>
 	<!-- everything in here will be transcluded / stuffed in and used as the element to select inside of -->
 	<div style='background-color:blue; height:200px; width:300px;'>&nbsp;</div>
 </div>
@@ -51,13 +52,16 @@ $scope.coords ={};
 
 //EXAMPLE 2 - aspect ratio (force square)
 partial / html:
-<div jrg-area-select coords='coords' aspect-ratio='1' select-buffer='25'>
+<div jrg-area-select coords='coords' aspect-ratio='1' select-buffer='25' inst-id='myInstId' inline='1'>
 	<!-- everything in here will be transcluded / stuffed in and used as the element to select inside of -->
 	<div style='background-color:blue; height:200px; width:300px;'>&nbsp;</div>
 </div>
 
 controller / js:
 $scope.coords ={};
+
+//re-init
+$scope.$broadcast('jrgAreaSelectReInit', {instId:'myInstId'});
 
 //end: usage
 */
@@ -79,23 +83,29 @@ function ($timeout) {
 			var defaultsAttrs ={
 				aspectRatio: 0,
 				selectBuffer: 50,
-				instId: "jrgjAreaSelect"+Math.random().toString(36).substring(7)
+				instId: "jrgjAreaSelect"+Math.random().toString(36).substring(7),
+				inline: 0
 			};
 			for(var xx in defaultsAttrs) {
 				if(attrs[xx] ===undefined) {
 					attrs[xx] =defaultsAttrs[xx];
 				}
 			}
-			var toInt =['aspectRatio', 'selectBuffer'];
+			var toInt =['aspectRatio', 'selectBuffer', 'inline'];
 			var ii;
 			for(ii =0; ii<toInt.length; ii++) {
 				attrs[toInt[ii]] =parseInt(attrs[toInt[ii]], 10);
 			}
 			
 			
-			var html ="<div style='position:relative;'>"+
-				"<span class='jrg-area-select-ele' ng-transclude></span>"+
-				"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.ele.left -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.ele.top)}}px; width:{{(coordsTemp.select.left -coordsTemp.ele.left)}}px;'>&nbsp;</div>"+		//left side: from element left to select left; from element top to element bottom
+			var html ="<div style='position:relative;'>";
+				if(attrs.inline) {
+					html+="<div class='jrg-area-select-ele' style='display:inline;' ng-transclude></div>"+
+				}
+				else {
+					html+="<div class='jrg-area-select-ele' ng-transclude></div>"+
+				}
+				html+="<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.ele.left -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.ele.top)}}px; width:{{(coordsTemp.select.left -coordsTemp.ele.left)}}px;'>&nbsp;</div>"+		//left side: from element left to select left; from element top to element bottom
 				"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.select.right -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.ele.top)}}px; width:{{(coordsTemp.ele.right -coordsTemp.select.right)}}px;'>&nbsp;</div>"+		//right side: from select right to element right; from element top to element bottom
 				"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.ele.top -offsets.ele.top)}}px; left:{{(coordsTemp.select.left -offsets.ele.left)}}px; height:{{(coordsTemp.select.top -coordsTemp.ele.top)}}px; width:{{(coordsTemp.select.right -coordsTemp.select.left)}}px;'>&nbsp;</div>"+		//top side: from select left to select right; from element top to select top
 				"<div class='jrg-area-select-blurred' style='top:{{(coordsTemp.select.bottom -offsets.ele.top)}}px; left:{{(coordsTemp.select.left -offsets.ele.left)}}px; height:{{(coordsTemp.ele.bottom -coordsTemp.select.bottom)}}px; width:{{(coordsTemp.select.right -coordsTemp.select.left)}}px;'>&nbsp;</div>"+		//bottom side: from select left to select right; from select bottom to element bottom
@@ -118,7 +128,7 @@ function ($timeout) {
 			setup
 			*/
 			var eles ={
-				main: $element.find('span'),
+				main: $element.find('div').find('div'),
 				doc: angular.element(document)
 			};
 			
@@ -408,7 +418,23 @@ function ($timeout) {
 			function getEleCoords(params) {
 				//need timeout for it to load properly
 				$timeout(function() {
-					var rect =eles.main[0].getBoundingClientRect();
+					var rect1 =eles.main[0].getBoundingClientRect();		//gives correct height & width sometimes negative/wrong left/top/right/bottom!
+					var el =eles.main[0];
+					var _x = 0;
+					var _y = 0;
+					while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+						_x += el.offsetLeft - el.scrollLeft;
+						_y += el.offsetTop - el.scrollTop;
+						el = el.offsetParent;
+					}
+					
+					var rect ={
+						left: _x,
+						right: (_x+rect1.width),
+						top: _y,
+						bottom: (_y+rect1.height)
+					};
+					
 					// console.log(rect);
 					$scope.coordsTemp.ele ={
 						left: rect.left,
