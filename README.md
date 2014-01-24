@@ -1,15 +1,14 @@
-# AngularJS directive angular-area-select area select image rectangle drag crop
+# angular-area-select
 
-[TODO - brief summary]
+Select an area (image or otherwise) with mouse or touch, i.e. for crop. Can set aspect ratio.
+A more lightweight (less feature rich) version of jCrop (no jQuery dependency). Can also be used for non-images as well (generic area select).
 
 ## Demo
 http://jackrabbitsgroup.github.io/angular-area-select/
 
 ## Dependencies
-- required:
-	[TODO]
 - optional
-	[TODO]
+	- lesshat
 
 See `bower.json` and `index.html` in the `gh-pages` branch for a full list / more details
 
