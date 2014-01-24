@@ -10,6 +10,7 @@
 7. scopeApply
 8. calculateSelectArea
 9. getEleCoords
+10. $scope.$on('jrgAreaSelectReInit',..
 
 @param {Object} scope (attrs that must be defined on the scope (i.e. in the controller) - they can't just be defined in the partial html). REMEMBER: use snake-case when setting these on the partial!
 	@param {Object} coords Object to pass in (can be empty) that will be stuffed with the values, specifically:
@@ -31,6 +32,7 @@
 @param {Object} attrs REMEMBER: use snake-case when setting these on the partial! i.e. my-attr='1' NOT myAttr='1'
 	@param {Number} [aspectRatio =0] 0 to NOT force an aspect ratio, otherwise width/height (so 1 for a square, 2 for twice as wide as tall and .5 for twice as tall as wide, etc.: use any number >0)
 	@param {Number} [selectBuffer =50] Number of pixels OUTSIDE of element to allow starting selection
+	@param {String} [instId =[random string]] A way to uniquely identify this instance of the directive - used for using $scope.$on('jrgAreaSelectReInit',..
 
 @dependencies
 [none]
@@ -76,7 +78,8 @@ function ($timeout) {
 		template: function(element, attrs) {
 			var defaultsAttrs ={
 				aspectRatio: 0,
-				selectBuffer: 50
+				selectBuffer: 50,
+				instId: "jrgjAreaSelect"+Math.random().toString(36).substring(7)
 			};
 			for(var xx in defaultsAttrs) {
 				if(attrs[xx] ===undefined) {
@@ -437,6 +440,18 @@ function ($timeout) {
 					};
 				}, 100);
 			}
+			
+			/**
+			@toc 10.
+			@method $scope.$on('jrgAreaSelectReInit',..
+			@param {Object} params
+				@param {String} instId
+			*/
+			$scope.$on('jrgAreaSelectReInit', function(evt, params) {
+				if(params.instId ==$attrs.instId) {
+					init({});
+				}
+			});
 			
 			init({});
 		}
