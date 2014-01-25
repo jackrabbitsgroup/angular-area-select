@@ -1,6 +1,6 @@
 Version numbers correspond to `bower.json` version
 
-# 1.0.1-4
+# 1.0.1 (2014-01-25)
 ## Features
 - `$scope.$on('jrgAreaSelectReInit',..` event listener added for re-initializing the directive (after it's already been written) - i.e. if the transcluded inner content changes
 - `$scope.$on('jrgAreaSelectHide',..` event listener added for hiding the directive (i.e. the blurred sections)
