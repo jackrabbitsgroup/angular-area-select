@@ -1,7 +1,17 @@
 <div ng-controller='HomeCtrl'>
-	<div style='position:absolute; left:50px; top:25px;'>
-		<div jrg-area-select coords='coords' aspect-ratio='1' select-buffer='25'>
-			<div style='background-color:blue; height:300px; width:400px;'>&nbsp;</div>
+	<div style='position:relative; height:350px;'>
+		<div style='position:absolute; left:50px; top:25px;'>
+			<div jrg-area-select coords='coords'>
+				<div style='background-color:blue; height:300px; width:400px;'>&nbsp;</div>
+			</div>
 		</div>
 	</div>
+	
+	<div jrg-area-select coords='coords2' aspect-ratio='1' select-buffer='15' inline='1' opts='opts2'>
+		<div style='background-color:red; height:350px; width:250px;'>&nbsp;</div>
+	</div>
+	<button ng-click='reInit()'>Re-init</button>
+	<button ng-click='changeInstId()'>Change InstId</button>
+	<br />
+	{{opts2}}
 </div>
