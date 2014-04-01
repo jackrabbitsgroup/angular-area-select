@@ -1,5 +1,10 @@
 Version numbers correspond to `bower.json` version
 
+# 1.0.2 (2014-04-01)
+## Features
+- move `instId` from `attrs` to `scope` to allow setting/changing later/dynamically
+
+
 # 1.0.1 (2014-01-25)
 ## Features
 - `$scope.$on('jrgAreaSelectReInit',..` event listener added for re-initializing the directive (after it's already been written) - i.e. if the transcluded inner content changes

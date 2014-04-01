@@ -29,11 +29,12 @@
 			@param {Number} bottom Relative to ele.top
 			@param {Number} height (for convenience: just bottom - top)
 			@param {Number} width (for convenience: just right - left)
+	@param {Object} [opts]
+		@param {String} [instId =[random string]] A way to uniquely identify this instance of the directive - used for using $scope.$on('jrgAreaSelectReInit',..
 
 @param {Object} attrs REMEMBER: use snake-case when setting these on the partial! i.e. my-attr='1' NOT myAttr='1'
 	@param {Number} [aspectRatio =0] 0 to NOT force an aspect ratio, otherwise width/height (so 1 for a square, 2 for twice as wide as tall and .5 for twice as tall as wide, etc.: use any number >0)
 	@param {Number} [selectBuffer =50] Number of pixels OUTSIDE of element to allow starting selection
-	@param {String} [instId =[random string]] A way to uniquely identify this instance of the directive - used for using $scope.$on('jrgAreaSelectReInit',..
 	@param {Number} [inline =0] Set to 1 to make the ng-transclude be an inline element (rather than a block element) so it won't take full width
 
 @dependencies
@@ -42,9 +43,9 @@
 @usage
 //EXAMPLE 1 - default
 partial / html:
-<div jrg-area-select coords='coords' inline='1'>
+<div jrg-area-select coords='coords'>
 	<!-- everything in here will be transcluded / stuffed in and used as the element to select inside of -->
-	<div style='background-color:blue; height:200px; width:300px;'>&nbsp;</div>
+	<div style='background-color:blue; height:300px; width:400px;'>&nbsp;</div>
 </div>
 
 controller / js:
@@ -53,16 +54,19 @@ $scope.coords ={};
 
 //EXAMPLE 2 - aspect ratio (force square)
 partial / html:
-<div jrg-area-select coords='coords' aspect-ratio='1' select-buffer='25' inst-id='myInstId' inline='1'>
+<div jrg-area-select coords='coords' aspect-ratio='1' select-buffer='15' inline='1' opts='opts'>
 	<!-- everything in here will be transcluded / stuffed in and used as the element to select inside of -->
-	<div style='background-color:blue; height:200px; width:300px;'>&nbsp;</div>
+	<div style='background-color:red; height:350px; width:250px;'>&nbsp;</div>
 </div>
 
 controller / js:
 $scope.coords ={};
+$scope.opts ={
+	instId: 'myInstId'
+};
 
 //re-init
-$scope.$broadcast('jrgAreaSelectReInit', {instId:'myInstId'});
+$scope.$broadcast('jrgAreaSelectReInit', {instId:$scope.opts.instId});
 
 //end: usage
 */
@@ -76,7 +80,8 @@ function ($timeout) {
 		restrict: 'A',
 		transclude: true,
 		scope: {
-			coords: '='
+			coords: '=',
+			opts: '=?'
 		},
 
 		// replace: true,
@@ -84,7 +89,6 @@ function ($timeout) {
 			var defaultsAttrs ={
 				aspectRatio: 0,
 				selectBuffer: 50,
-				instId: "jrgjAreaSelect"+Math.random().toString(36).substring(7),
 				inline: 0
 			};
 			for(var xx in defaultsAttrs) {
@@ -124,6 +128,17 @@ function ($timeout) {
 		},
 		
 		link: function(scope, element, attrs) {
+			if(scope.opts ===undefined) {
+				scope.opts ={};
+			}
+			var defaultsOpts ={
+				instId: "jrgjAreaSelect"+Math.random().toString(36).substring(7)
+			};
+			for(var xx in defaultsOpts) {
+				if(scope.opts[xx] ===undefined) {
+					scope.opts[xx] =defaultsOpts[xx];
+				}
+			}
 		},
 		
 		controller: function($scope, $element, $attrs) {
@@ -487,7 +502,7 @@ function ($timeout) {
 				@param {String} instId
 			*/
 			$scope.$on('jrgAreaSelectReInit', function(evt, params) {
-				if(params.instId ==$attrs.instId) {
+				if(params.instId ==$scope.opts.instId) {
 					init({});
 				}
 			});
@@ -500,7 +515,7 @@ function ($timeout) {
 				@param {String} instId
 			*/
 			$scope.$on('jrgAreaSelectHide', function(evt, params) {
-				if(params.instId ==$attrs.instId) {
+				if(params.instId ==$scope.opts.instId) {
 					$scope.show.blurred =false;
 				}
 			});
