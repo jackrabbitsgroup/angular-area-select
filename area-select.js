@@ -36,6 +36,7 @@
 	@param {Number} [aspectRatio =0] 0 to NOT force an aspect ratio, otherwise width/height (so 1 for a square, 2 for twice as wide as tall and .5 for twice as tall as wide, etc.: use any number >0)
 	@param {Number} [selectBuffer =50] Number of pixels OUTSIDE of element to allow starting selection
 	@param {Number} [inline =0] Set to 1 to make the ng-transclude be an inline element (rather than a block element) so it won't take full width
+	@param {Number} [inlineBlock =0] Set to 1 to make the ng-transclude be an inline-block element (rather than a block element) so it won't take full width
 
 @dependencies
 [none]
@@ -69,6 +70,28 @@ $scope.opts ={
 $scope.$broadcast('jrgAreaSelectReInit', {instId:$scope.opts.instId});
 
 //end: usage
+
+
+//EXAMPLE 3 - image - note there's an HTML bug where there's an extra space below the image so 'vertical-align:top;' is needed on the image to remove this: http://stackoverflow.com/questions/5804256/why-an-image-inside-a-div-has-an-extra-space-below-the-image
+partial / html:
+<div jrg-area-select coords='coords' aspect-ratio='1' select-buffer='15' opts='opts'>
+	<!-- everything in here will be transcluded / stuffed in and used as the element to select inside of -->
+	<img ng-src='{{img.src}}' style='width:100%; height:100%; vertical-align:top;'/>
+</div>
+
+controller / js:
+$scope.coords ={};
+$scope.opts ={
+	instId: 'myInstId'
+};
+$scope.img ={
+	src: 'path/to/pic1.jpg'
+};
+
+//re-init
+$scope.$broadcast('jrgAreaSelectReInit', {instId:$scope.opts.instId});
+
+//end: usage
 */
 
 'use strict';
@@ -89,14 +112,15 @@ function ($timeout) {
 			var defaultsAttrs ={
 				aspectRatio: 0,
 				selectBuffer: 50,
-				inline: 0
+				inline: 0,
+				inlineBlock: 0
 			};
 			for(var xx in defaultsAttrs) {
 				if(attrs[xx] ===undefined) {
 					attrs[xx] =defaultsAttrs[xx];
 				}
 			}
-			var toInt =['aspectRatio', 'selectBuffer', 'inline'];
+			var toInt =['aspectRatio', 'selectBuffer', 'inline', 'inlineBlock'];
 			var ii;
 			for(ii =0; ii<toInt.length; ii++) {
 				attrs[toInt[ii]] =parseInt(attrs[toInt[ii]], 10);
@@ -106,6 +130,9 @@ function ($timeout) {
 			var html ="<div style='position:relative;'>";
 				if(attrs.inline) {
 					html+="<div class='jrg-area-select-ele' style='display:inline;' ng-transclude></div>";
+				}
+				else if(attrs.inlineBlock) {
+					html+="<div class='jrg-area-select-ele' style='display:inline-block;' ng-transclude></div>";
 				}
 				else {
 					html+="<div class='jrg-area-select-ele' ng-transclude></div>";
