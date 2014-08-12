@@ -1,5 +1,8 @@
 Version numbers correspond to `bower.json` version
 
+# 1.0.4 (2014-08-12)
+[same as v1.0.3, just updated `bower.json` & `CHANGELOG`]
+
 # 1.0.3 (2014-08-12)
 ## Features
 - add `inline-block` attribute
