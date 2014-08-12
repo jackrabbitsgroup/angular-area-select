@@ -1,5 +1,11 @@
 Version numbers correspond to `bower.json` version
 
+# 1.0.3 (2014-08-12)
+## Features
+- add `inline-block` attribute
+- chore: update Angular to 1.3.0-beta.17 (but should still be backwards compatible)
+
+
 # 1.0.2 (2014-04-01)
 ## Features
 - move `instId` from `attrs` to `scope` to allow setting/changing later/dynamically
