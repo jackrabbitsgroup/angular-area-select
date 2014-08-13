@@ -1,5 +1,10 @@
 Version numbers correspond to `bower.json` version
 
+# 1.0.6 (2014-08-12)
+## Bug Fixes
+- do NOT substract scroll top/left when getting element offset (fixes webkit/chrome issue when scrolled down on the page)
+
+
 # 1.0.5 (2014-08-12)
 - fix `bower.json` angular versions to be `>=` for backwards compatibility
 
