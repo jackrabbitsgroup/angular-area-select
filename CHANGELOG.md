@@ -1,5 +1,9 @@
 Version numbers correspond to `bower.json` version
 
+# 1.0.5 (2014-08-12)
+- fix `bower.json` angular versions to be `>=` for backwards compatibility
+
+
 # 1.0.4 (2014-08-12)
 [same as v1.0.3, just updated `bower.json` & `CHANGELOG`]
 
